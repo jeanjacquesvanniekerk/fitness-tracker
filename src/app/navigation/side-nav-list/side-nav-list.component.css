@@ -1,0 +1,14 @@
+a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+a:hover,
+a:active {
+  color: lightgray;
+}
+
+.caption-link {
+  display: inline;
+  padding-left: 6px;
+}
