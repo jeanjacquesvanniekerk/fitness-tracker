@@ -8,6 +8,8 @@ import { AuthData } from "./auth-data.model";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { auth } from "firebase/app";
 import { TrainingService } from "../training/training.service";
+import { MatSnackBar } from "@angular/material";
+import { UIService } from "../shared/ui.service";
 
 @Injectable()
 export class AuthService {
@@ -17,7 +19,8 @@ export class AuthService {
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private uiService: UIService
   ) {}
 
   initAuthListener() {
@@ -36,24 +39,30 @@ export class AuthService {
   }
 
   registerUser(authData: AuthData) {
+    this.uiService.loadingStateChanged.next(true);
     this.afAuth
       .createUserWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
+        this.uiService.loadingStateChanged.next(false);
         console.log(result);
       })
       .catch(err => {
-        console.log(err);
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showSnackBar(err.message, null, 3000);
       });
   }
 
   login(authData: AuthData) {
+    this.uiService.loadingStateChanged.next(true);
     this.afAuth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
+        this.uiService.loadingStateChanged.next(false);
         console.log(result);
       })
       .catch(err => {
-        console.log(err);
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showSnackBar(err.message, null, 3000);
       });
   }
 
